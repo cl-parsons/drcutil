@@ -3,7 +3,7 @@
 source config.sh
 
 cd $SRC_DIR/OpenRTM-aist
-make maintainer-clean
+make maintainer-clean && rm configure
 rm -rf $SRC_DIR/openhrp3/$BUILD_SUBDIR
 rm -rf $SRC_DIR/HRP2/$BUILD_SUBDIR
 rm -rf $SRC_DIR/HRP2KAI/$BUILD_SUBDIR
