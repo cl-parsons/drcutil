@@ -114,7 +114,7 @@ install_hrpsys-base() {
     else
 	EXTRA_OPTION=(-DINSTALL_HRPIO=OFF)
     fi
-    if [ "$USE_HRPSYSEXT" -eq 0 ]; then
+    if ([ "$DIST_KIND" == "ubuntu" ] && [ "$DIST_VER" == "20.04" ]); then
 	EXTRA_OPTION+=(-DUSE_HRPSYSEXT=OFF)
     else
 	EXTRA_OPTION+=(-DUSE_HRPSYSEXT=ON)
