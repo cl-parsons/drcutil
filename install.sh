@@ -110,14 +110,15 @@ install_pcl() {
 
 install_hrpsys-base() {
     if [ "$INTERNAL_MACHINE" -eq 0 ]; then
-	EXTRA_OPTION=(-DINSTALL_HRPIO=ON)
+	    EXTRA_OPTION=(-DINSTALL_HRPIO=ON)
     else
-	EXTRA_OPTION=(-DINSTALL_HRPIO=OFF)
+	    EXTRA_OPTION=(-DINSTALL_HRPIO=OFF)
     fi
     if ([ "$DIST_KIND" == "ubuntu" ] && [ "$DIST_VER" == "20.04" ]); then
-	EXTRA_OPTION+=(-DUSE_HRPSYSEXT=OFF)
+	    EXTRA_OPTION+=(-DUSE_HRPSYSEXT=OFF)
+      EXTRA_OPTION+=(-DUSE_HRPSYSUTIL=OFF)
     else
-	EXTRA_OPTION+=(-DUSE_HRPSYSEXT=ON)
+	    EXTRA_OPTION+=(-DUSE_HRPSYSEXT=ON)
     fi
     ROBOT_IOB_VERSION_OPTION=""
     if [ -n "$ROBOT_IOB_VERSION" ]; then
