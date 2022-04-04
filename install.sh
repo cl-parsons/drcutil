@@ -114,6 +114,11 @@ install_hrpsys-base() {
     else
 	EXTRA_OPTION=(-DINSTALL_HRPIO=OFF)
     fi
+    if [ "$USE_HRPSYSEXT" -eq 0 ]; then
+	EXTRA_OPTION+=(-DUSE_HRPSYSEXT=OFF)
+    else
+	EXTRA_OPTION+=(-DUSE_HRPSYSEXT=ON)
+    fi
     ROBOT_IOB_VERSION_OPTION=""
     if [ -n "$ROBOT_IOB_VERSION" ]; then
         ROBOT_IOB_VERSION_OPTION="-DROBOT_IOB_VERSION=${ROBOT_IOB_VERSION}"

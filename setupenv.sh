@@ -138,7 +138,11 @@ setupenv_choreonoid() {
 	./install-requisites-$DIST_KIND-$DIST_VER.sh
 
 	#hrpcnoid
-	sudo apt-get -y --allow-unauthenticated install libzbar-dev python-matplotlib
+	if [ "$DIST_VER" = "20.04" ]; then
+	  sudo apt-get -y --allow-unauthenticated install libzbar-dev python3-matplotlib libqt5x11extras5-dev libxfixes-dev
+	else
+	  sudo apt-get -y --allow-unauthenticated install libzbar-dev python-matplotlib
+	fi
     fi
 }
 
