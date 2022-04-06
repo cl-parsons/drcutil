@@ -143,6 +143,10 @@ install_HRP4CR() {
     cmake_install_with_option HRP4CR
 }
 
+install_HRP4J() {
+    cmake_install_with_option HRP4J
+}
+
 install_sch-core() {
     cmake_install_with_option sch-core
 }
@@ -161,6 +165,9 @@ install_hrpsys-humanoid() {
 	EXTRA_OPTION=(-DGENERATE_FILES_FOR_SIMULATION=ON)
     else
 	EXTRA_OPTION=(-DGENERATE_FILES_FOR_SIMULATION=OFF)
+    fi
+    if ([ "$DIST_KIND" == "ubuntu" ] && [ "$DIST_VER" == "20.04" ]); then
+      EXTRA_OPTION+=(-DWITH_PCL=OFF -DWITH_OPENCV=OFF)
     fi
     cmake_install_with_option hrpsys-humanoid -DCOMPILE_JAVA_STUFF=OFF -DENABLE_SAVEDBG=$ENABLE_SAVEDBG "${EXTRA_OPTION[@]}"
 }
@@ -203,6 +210,9 @@ install_choreonoid() {
     if [ -e $SRC_DIR/HRP5P/customizer ]; then
       CUSTOMIZERS="$SRC_DIR/HRP5P/customizer/HRP5PCustomizer;$CUSTOMIZERS"
     fi
+    if [ -e $SRC_DIR/HRP4CR/customizer ]; then
+      CUSTOMIZERS="$SRC_DIR/HRP4CR/customizer/HRP4CRCustomizer;$CUSTOMIZERS"
+    fi
     # FIXME?: This doesn't look right.  CMAKE_CXX_FLAGS is ignored
     # unless CMAKE_BUILD_TYPE is empty, which it is not by default.
     cmake_install_with_option "choreonoid" -DENABLE_CORBA=ON -DBUILD_CORBA_PLUGIN=ON -DBUILD_OPENRTM_PLUGIN=ON -DUSE_BUILTIN_CAMERA_IMAGE_IDL=ON -DBUILD_PCL_PLUGIN=ON -DBUILD_OPENHRP_PLUGIN=ON -DBUILD_GRXUI_PLUGIN=ON -DBODY_CUSTOMIZERS="$CUSTOMIZERS" -DBUILD_DRC_USER_INTERFACE_PLUGIN=ON -DROBOT_HOSTNAME="$ROBOT_HOSTNAME" -DBUILD_ASSIMP_PLUGIN=OFF -DBUILD_PYTHON_PLUGIN=OFF -DUSE_PYBIND11=OFF -DUSE_PYTHON3=OFF -DBUILD_BALANCER_PLUGIN=OFF -DENABLE_PYTHON=OFF -DBUILD_PYTHON_SIM_SCRIPT_PLUGIN=OFF -DBUILD_BOOST_PYTHON_MODULES=ON -DENABLE_CXX_STANDARD_17=OFF
@@ -217,6 +227,39 @@ install_choreonoid() {
     sed -i -e "s#/home/vagrant/openrtp#$PREFIX#g" $DRCUTIL/Choreonoid.conf
     if [ ! -e $HOME/.config/Choreonoid/Choreonoid.conf ];then
 	cp $DRCUTIL/Choreonoid.conf $HOME/.config/Choreonoid
+    fi
+}
+
+install_choreonoid-ros()
+{
+    CUSTOMIZERS=
+    if [ -e $SRC_DIR/HRP2/customizer ]; then
+      CUSTOMIZERS="$SRC_DIR/HRP2/customizer/HRP2Customizer;$CUSTOMIZERS"
+    fi
+    if [ -e $SRC_DIR/HRP5P/customizer ]; then
+      CUSTOMIZERS="$SRC_DIR/HRP5P/customizer/HRP5PCustomizer;$CUSTOMIZERS"
+    fi
+    if [ -e $SRC_DIR/HRP4CR/customizer ]; then
+      CUSTOMIZERS="$SRC_DIR/HRP4CR/customizer/HRP4CRCustomizer;$CUSTOMIZERS"
+    fi
+    ROS_DISTRO=""
+    if ([ "$DIST_KIND" == "ubuntu" ] && [ "$DIST_VER" == "20.04" ]); then
+      ROS_DISTRO="noetic"
+    elif ([ "$DIST_KIND" == "ubuntu" ] && [ "$DIST_VER" == "18.04" ]); then
+      ROS_DISTRO="melodic"
+    else
+      echo "choreonoid_ros is not supported in $DIST_KIND:$DIST_VER"
+    fi
+    
+    if [[ ! -z "$ROS_DISTRO" ]]; then
+      echo "Building choreonoid_ros catkin workspace"
+      export PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
+      . /opt/ros/${ROS_DISTRO}/setup.bash
+      cd "$SRC_DIR/catkin_ws_choreonoid"
+      echo $ROS_PACKAGE_PATH
+      catkin init
+      catkin build -DBODY_CUSTOMIZERS="$CUSTOMIZERS" -DCMAKE_CXX_STANDARD=11 -DENABLE_CORBA=ON -DBUILD_CORBA_PLUGIN=ON -DBUILD_OPENRTM_PLUGIN=ON -DUSE_BUILTIN_CAMERA_IMAGE_IDL=ON -DBUILD_PCL_PLUGIN=ON -DBUILD_OPENHRP_PLUGIN=ON -DBUILD_GRXUI_PLUGIN=ON -DBUILD_DRC_USER_INTERFACE_PLUGIN=ON -DROBOT_HOSTNAME="$ROBOT_HOSTNAME" -DBUILD_ASSIMP_PLUGIN=OFF -DUSE_PYBIND11=ON -DUSE_PYTHON3=OFF -DBUILD_BALANCER_PLUGIN=OFF -DENABLE_PYTHON=ON -DBUILD_PYTHON_SIM_SCRIPT_PLUGIN=OFF -DBUILD_BOOST_PYTHON_MODULES=OFF -DUSE_EXTERNAL_PYBIND11=ON -DBUILD_PYTHON_PLUGIN=ON -DBUILD_PYTHON_SIM_SCRIPT_PLUGIN=ON -DBUILD_HRPSYS31_PLUGIN=ON -DBUILD_ROBOT_ACCESS_PLUGIN=ON -DCMAKE_CXX_STANDARD=14
+      cd -
     fi
 }
 
@@ -254,6 +297,9 @@ install_setup.bash() {
     
     echo "add the following line to your .bashrc"
     echo "source $DRCUTIL/setup.bash"
+    if [ -f "$SRC_DIR/catkin_ws_choreonoid/devel/setup.bash" ]; then
+      echo "source $SRC_DIR/catkin_ws_choreonoid/devel/setup.bash"
+    fi
 }
 
 install_is-jaxa() {

@@ -82,6 +82,10 @@ setupenv_HRP4CR() {
     :
 }
 
+setupenv_HRP4J() {
+    :
+}
+
 setupenv_sch-core() {
     :
 }
@@ -144,6 +148,12 @@ setupenv_choreonoid() {
 	  sudo apt-get -y --allow-unauthenticated install libzbar-dev python-matplotlib
 	fi
     fi
+}
+
+setupenv_choreonoid-ros()
+{
+  setupenv_choreonoid
+  sudo apt-get -y install libfmt-dev
 }
 
 setupenv_is-jaxa() {

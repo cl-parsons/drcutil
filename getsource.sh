@@ -62,6 +62,10 @@ get_source_HRP4CR() {
     get_source "git clone --recursive ${GITHUB_LINK}isri-aist/hrp4cr" HRP4CR
 }
 
+get_source_HRP4J() {
+    get_source "git clone --recursive ${GITHUB_LINK}isri-aist/hrp4j" HRP4J
+}
+
 get_source_hrpsys-private() {
     get_source "git clone ${GITHUB_LINK}isri-aist/hrpsys-private" hrpsys-private
 }
@@ -115,6 +119,20 @@ get_source_choreonoid() {
     get_source "git clone ${GITHUB_LINK}isri-aist/cnoid-boost-python" cnoid-boost-python
     get_source "git clone ${GITHUB_LINK}isri-aist/grxui-plugin" grxui-plugin
     get_source "git clone ${GITHUB_LINK}isri-aist/openhrp-plugin" openhrp-plugin
+    cd ../..
+}
+
+get_source_choreonoid-ros() {
+    mkdir -p catkin_ws_choreonoid/src
+    cd catkin_ws_choreonoid/src
+    get_source "git clone ${GITHUB_LINK}arntanguy/choreonoid_ros" choreonoid_ros 
+    get_source "git clone ${GITHUB_LINK}arntanguy/choreonoid-1.git" choreonoid
+    cd choreonoid/ext
+    get_source "git clone ${GITHUB_LINK}arntanguy/choreonoid-openrtm.git" choreonoid-openrtm
+    get_source "git clone ${GITHUB_LINK}isri-aist/grxui-plugin" grxui-plugin
+    get_source "git clone ${GITHUB_LINK}isri-aist/openhrp-plugin" openhrp-plugin
+    get_source "git clone ${GITHUB_LINK}choreonoid/robot-access-plugin" robot-access-plugin
+    cd ../..
     cd ../..
 }
 
