@@ -11,7 +11,7 @@ APT_DEPENDENCIES=()
 setupenv_script()
 {
   echo "Installing script dependencies"
-  sudo $APT install curl build-essential pkg-config cmake doxygen
+  sudo $APT install curl build-essential pkg-config cmake doxygen apt-transport-https ca-certificates gnupg
 }
 
 setupenv_OpenRTM-aist() {
@@ -189,9 +189,9 @@ setupenv_choreonoid() {
     brew install gettext qt zbar
   else
     #choreonoid
-    cd $SRC_DIR/choreonoid/misc/script
     if [ "$DIST_KIND" = "ubuntu" ] && [ "$DIST_VER" != "20.04" ]; then
       echo "-- Installing choreonoid dependecies using $SRC_DIR/choreonoid/misc/script/install-requisites-$DIST_KIND-$DIST_VER.sh"
+      cd $SRC_DIR/choreonoid/misc/script
       ./install-requisites-$DIST_KIND-$DIST_VER.sh
       APT_DEPENDENCIES+=(python-matplotlib)
     else
@@ -275,4 +275,4 @@ fi;
 echo "-- Updating packages list"
 sudo $APT update || true
 echo "-- Installing dependencies"
-sudo $APT install "${APT_DEPENDENCIES[*]}"
+sudo $APT install ${APT_DEPENDENCIES[*]}
