@@ -1,6 +1,7 @@
 export SRC_DIR=$HOME/src
 export PREFIX=$HOME/openrtp
 export SUDO=
+export APT="apt-get --allow-unauthenticated"
 export MAKE_THREADS_NUMBER=2
 export BUILD_TYPE=Release
 export BUILD_SUBDIR=build
