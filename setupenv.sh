@@ -11,7 +11,7 @@ APT_DEPENDENCIES=()
 setupenv_script()
 {
   echo "Installing script dependencies"
-  sudo $APT install curl
+  sudo $APT install curl build-essential pkg-config cmake doxygen
 }
 
 setupenv_OpenRTM-aist() {
@@ -27,50 +27,48 @@ setupenv_openhrp3() {
     brew install cmake eigen boost pkg-config jpeg libpng
   else
     cd $SRC_DIR/openhrp3/util
-    # echo "-- Installing dependencies using script $SRC_DIR/openhrp3/util/installPackages.sh packages.list.$DIST_KIND.$DIST_VER"
-    #./installPackages.sh packages.list.$DIST_KIND.$DIST_VER
-
-    APT_DEPENDENCIES+=(openjdk-8-jdk)
-    APT_DEPENDENCIES+=(openjdk-8-jre)
-    APT_DEPENDENCIES+=(jython)
-    APT_DEPENDENCIES+=(libreadline-java)
-    APT_DEPENDENCIES+=(java-common)
-    APT_DEPENDENCIES+=(build-essential)
-    APT_DEPENDENCIES+=(cmake)
-    APT_DEPENDENCIES+=(doxygen)
-    APT_DEPENDENCIES+=(graphviz)
-    APT_DEPENDENCIES+=(pkg-config)
-    APT_DEPENDENCIES+=(python-yaml)
-    APT_DEPENDENCIES+=(libcos4-dev)
-    APT_DEPENDENCIES+=(libomnievents-dev)
-    APT_DEPENDENCIES+=(libomniorb4-dev)
-    APT_DEPENDENCIES+=(libomnithread4-dev)
-    APT_DEPENDENCIES+=(omnievents)
-    APT_DEPENDENCIES+=(omniidl)
-    APT_DEPENDENCIES+=(omniidl-python)
-    APT_DEPENDENCIES+=(omniorb)
-    APT_DEPENDENCIES+=(omniorb-idl)
-    APT_DEPENDENCIES+=(omniorb-nameserver)
-    APT_DEPENDENCIES+=(python-omniorb)
-    APT_DEPENDENCIES+=(python-tk)
-    APT_DEPENDENCIES+=(liblapack-dev)
-    APT_DEPENDENCIES+=(libatlas-base-dev)
-    APT_DEPENDENCIES+=(libblas-dev)
-    APT_DEPENDENCIES+=(f2c)
-    APT_DEPENDENCIES+=(libf2c2)
-    APT_DEPENDENCIES+=(libf2c2-dev)
-    APT_DEPENDENCIES+=(libboost-dev)
-    APT_DEPENDENCIES+=(libboost-filesystem-dev )
-    APT_DEPENDENCIES+=(libboost-program-options-dev )
-    APT_DEPENDENCIES+=(libboost-regex-dev)
-    APT_DEPENDENCIES+=(libboost-thread-dev)
-    APT_DEPENDENCIES+=(zlib1g-dev)
-    # XXX Installing libjpeg62 causes ROS to uninstall
-    # This doesn't seem to be needed
-    #APT_DEPENDENCIES+=(libjpeg62-dev)
-    APT_DEPENDENCIES+=(libpng-dev)
-    APT_DEPENDENCIES+=(uuid-dev)
-    APT_DEPENDENCIES+=(libeigen3-dev)
+    if [ "$DIST_KIND" = "ubuntu" ] && [ "$DIST_VER" != "20.04" ]; then
+      echo "-- Installing dependencies using script $SRC_DIR/openhrp3/util/installPackages.sh packages.list.$DIST_KIND.$DIST_VER"
+      /installPackages.sh packages.list.$DIST_KIND.$DIST_VER
+    else
+      APT_DEPENDENCIES+=(openjdk-8-jdk)
+      APT_DEPENDENCIES+=(openjdk-8-jre)
+      APT_DEPENDENCIES+=(jython)
+      APT_DEPENDENCIES+=(libreadline-java)
+      APT_DEPENDENCIES+=(java-common)
+      APT_DEPENDENCIES+=(graphviz)
+      APT_DEPENDENCIES+=(python-yaml)
+      APT_DEPENDENCIES+=(libcos4-dev)
+      APT_DEPENDENCIES+=(libomnievents-dev)
+      APT_DEPENDENCIES+=(libomniorb4-dev)
+      APT_DEPENDENCIES+=(libomnithread4-dev)
+      APT_DEPENDENCIES+=(omnievents)
+      APT_DEPENDENCIES+=(omniidl)
+      APT_DEPENDENCIES+=(omniidl-python)
+      APT_DEPENDENCIES+=(omniorb)
+      APT_DEPENDENCIES+=(omniorb-idl)
+      APT_DEPENDENCIES+=(omniorb-nameserver)
+      APT_DEPENDENCIES+=(python-omniorb)
+      APT_DEPENDENCIES+=(python-tk)
+      APT_DEPENDENCIES+=(liblapack-dev)
+      APT_DEPENDENCIES+=(libatlas-base-dev)
+      APT_DEPENDENCIES+=(libblas-dev)
+      APT_DEPENDENCIES+=(f2c)
+      APT_DEPENDENCIES+=(libf2c2)
+      APT_DEPENDENCIES+=(libf2c2-dev)
+      APT_DEPENDENCIES+=(libboost-dev)
+      APT_DEPENDENCIES+=(libboost-filesystem-dev )
+      APT_DEPENDENCIES+=(libboost-program-options-dev )
+      APT_DEPENDENCIES+=(libboost-regex-dev)
+      APT_DEPENDENCIES+=(libboost-thread-dev)
+      APT_DEPENDENCIES+=(zlib1g-dev)
+      # XXX Installing libjpeg62 causes ROS to uninstall
+      # This doesn't seem to be needed
+      #APT_DEPENDENCIES+=(libjpeg62-dev)
+      APT_DEPENDENCIES+=(libpng-dev)
+      APT_DEPENDENCIES+=(uuid-dev)
+      APT_DEPENDENCIES+=(libeigen3-dev)
+    fi
 
     echo "-- Removing openrtm-aist-dev and openrtm-aist packages (will be installed from source)"
     sudo $APT remove openrtm-aist-dev openrtm-aist # install from source
@@ -192,11 +190,11 @@ setupenv_choreonoid() {
   else
     #choreonoid
     cd $SRC_DIR/choreonoid/misc/script
-    # echo "-- Installing choreonoid dependecies using $SRC_DIR/choreonoid/misc/script/install-requisites-$DIST_KIND-$DIST_VER.sh"
-    # ./install-requisites-$DIST_KIND-$DIST_VER.sh
-
-      #APT_DEPENDENCIES+=(build-essential)
-      #APT_DEPENDENCIES+=(cmake-curses-gui)
+    if [ "$DIST_KIND" = "ubuntu" ] && [ "$DIST_VER" != "20.04" ]; then
+      echo "-- Installing choreonoid dependecies using $SRC_DIR/choreonoid/misc/script/install-requisites-$DIST_KIND-$DIST_VER.sh"
+      ./install-requisites-$DIST_KIND-$DIST_VER.sh
+      APT_DEPENDENCIES+=(python-matplotlib)
+    else
       APT_DEPENDENCIES+=(libboost-dev)
       APT_DEPENDENCIES+=(libboost-system-dev)
       APT_DEPENDENCIES+=(libboost-program-options-dev)
@@ -224,13 +222,9 @@ setupenv_choreonoid() {
       APT_DEPENDENCIES+=(libsndfile1-dev) # XXX is this used?
       APT_DEPENDENCIES+=(libgstreamer1.0-dev)
       APT_DEPENDENCIES+=(libgstreamer-plugins-base1.0-dev)
-
-      #hrpcnoid
-      if [ "$DIST_VER" = "20.04" ]; then
-        APT_DEPENDENCIES+=(libzbar-dev python3-matplotlib libqt5x11extras5-dev libxfixes-dev)
-      else
-        APT_DEPENDENCIES+=(libzbar-dev python-matplotlib)
-      fi
+      APT_DEPENDENCIES+=(python3-matplotlib)
+    fi
+    APT_DEPENDENCIES+=(libzbar-dev)
   fi
 }
 
