@@ -235,7 +235,7 @@ setupenv_choreonoid-ros()
   # Setup ROS
   sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
   curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
-  APT_DEPENDENCIES+=(ros-noetic-desktop python3-catkin-tools libfmt-dev)
+  APT_DEPENDENCIES+=(ros-noetic-desktop ros-noetic-controller-manager ros-noetic-joint-limits-interface ros-noetic-transmission-interface python3-catkin-tools libfmt-dev)
 }
 
 setupenv_is-jaxa() {
