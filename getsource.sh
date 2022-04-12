@@ -2,11 +2,7 @@
 
 source config.sh
 
-if [ $GITHUB_SSH != "1" ]; then
-    GITHUB_LINK=https://github.com/
-else
-    GITHUB_LINK=git@github.com:
-fi
+GITHUB_LINK=git@github.com:
 
 if [ $OSNAME != "Darwin" ]; then
     sudo apt-get -y install git subversion
