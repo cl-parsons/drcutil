@@ -72,13 +72,17 @@ setupenv_openhrp3() {
 
     echo "-- Removing openrtm-aist-dev and openrtm-aist packages (will be installed from source)"
     sudo $APT remove openrtm-aist-dev openrtm-aist # install from source
-    sudo sed -i -e 's/giopMaxMsgSize = 2097152/giopMaxMsgSize = 2147483648/g' /etc/omniORB.cfg
-
     if [ "$BUILD_GOOGLE_TEST" = "ON" ]; then
       APT_DEPENDENCIES+=(libgtest-dev)
     fi
   fi
 }
+
+setupenv_openhrp3_postinstall()
+{
+  sudo sed -i -e 's/giopMaxMsgSize = 2097152/giopMaxMsgSize = 2147483648/g' /etc/omniORB.cfg
+}
+
 
 setupenv_pcl() {
   if [ $OSNAME = "Darwin" ]; then
@@ -276,3 +280,11 @@ echo "-- Updating packages list"
 sudo $APT update || true
 echo "-- Installing dependencies"
 sudo $APT install ${APT_DEPENDENCIES[*]}
+
+for package in $PACKAGES; do
+  if [[ $(type -t setupenv_${package}_postinstall) == function ]]
+  then
+    echo "Running post-install steps for $package"
+    setupenv_${package}_postinstall
+  fi
+done

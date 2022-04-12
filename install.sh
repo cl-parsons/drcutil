@@ -226,7 +226,7 @@ install_choreonoid() {
     sed -i -e "s#/home/vagrant/openrtp/share/choreonoid-x.y#$CHOREONOID_SHARE#g" $DRCUTIL/Choreonoid.conf
     sed -i -e "s#/home/vagrant/openrtp#$PREFIX#g" $DRCUTIL/Choreonoid.conf
     if [ ! -e $HOME/.config/Choreonoid/Choreonoid.conf ];then
-	cp $DRCUTIL/Choreonoid.conf $HOME/.config/Choreonoid
+      cp $DRCUTIL/Choreonoid.conf $HOME/.config/Choreonoid
     fi
 }
 
